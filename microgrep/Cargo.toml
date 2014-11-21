@@ -1,0 +1,7 @@
+[package]
+name = "microgrep"
+version = "0.0.1"
+authors = ["Pablo Brasero"]
+
+[[bin]]
+name = "microgrep"
