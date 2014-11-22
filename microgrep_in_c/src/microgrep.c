@@ -15,18 +15,18 @@ void scan_file(char *path, regex_t *re_ptr) {
 
   file = fopen(path, "r");
   if (file == NULL) {
-    printf("%s\n", strerror(errno));
+    fprintf(stderr, "ERROR(fopen): %s\n", strerror(errno));
     return;
   }
   filebuf_size = line_size = 512;
   filebuf = malloc(filebuf_size);
   if (filebuf == NULL) {
-    printf("Could not allocate filebuf (%zd bytes)\n", filebuf_size);
+    fprintf(stderr, "ERROR(malloc): no memory for filebuf (%zd bytes)\n", filebuf_size);
     return;
   }
   line = malloc(line_size);
   if (line == NULL) {
-    printf("Could not allocate line (%zd bytes)\n", line_size);
+    fprintf(stderr, "ERROR(malloc): no memory for line (%zd bytes)\n", line_size);
     return;
   }
   line_i = 0;
@@ -45,7 +45,7 @@ void scan_file(char *path, regex_t *re_ptr) {
         if (line_i == line_size) {
           line_size *= 2;
           if ((line = realloc(line, line_size)) == NULL) {
-            printf("Could not reallocate line (%zd bytes)\n", line_size);
+            fprintf(stderr, "ERROR(realloc): no memory for line (%zd bytes)\n", line_size);
             return;
           }
         }
@@ -74,7 +74,7 @@ regex_t *setup_re() {
     errbuf_size = regerror(retcode, re_ptr, NULL, 0);
     errbuf = malloc(errbuf_size);
     regerror(retcode, re_ptr, errbuf, errbuf_size);
-    fprintf(stderr, "%s", errbuf);
+    fprintf(stderr, "ERROR(regex): %s\n", errbuf);
     free(errbuf);
     teardown_re(re_ptr);
     return NULL;
