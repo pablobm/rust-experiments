@@ -4,29 +4,14 @@
 #include <string.h>
 #include <errno.h>
 
-void scan_file(char *path) {
+void scan_file(char *path, regex_t *re_ptr) {
   int i;
-
-  regex_t re;
-  int retcode;
-  size_t errbuf_size;
-  char *errbuf;
 
   size_t filebuf_size, line_size;
   char *filebuf, *line;
   char curchar;
   unsigned int line_i, read_count, last_newline_i;
   FILE *file;
-
-  retcode = regcomp(&re, "[0-9][0-9]\\.[0-9]ms)", 0);
-  if (retcode != 0) {
-    errbuf_size = regerror(retcode, &re, NULL, REG_NOSUB);
-    errbuf = malloc(errbuf_size);
-    regerror(retcode, &re, errbuf, errbuf_size);
-    fprintf(stderr, "%s", errbuf);
-    free(errbuf);
-    return;
-  }
 
   file = fopen(path, "r");
   if (file == NULL) {
@@ -52,8 +37,7 @@ void scan_file(char *path) {
       curchar = filebuf[i];
       if (curchar == '\n') {
         line[line_i] = '\0';
-        retcode = regexec(&re, line, 0, NULL, 0);
-        if (retcode == 0) {
+        if ((regexec(re_ptr, line, 0, NULL, 0) == 0)) {
           printf("%s\n", line);
         }
         line_i = 0;
@@ -74,10 +58,39 @@ void scan_file(char *path) {
   free(filebuf);
 }
 
+void teardown_re(regex_t *re_ptr) {
+  regfree(re_ptr);
+}
+
+regex_t *setup_re() {
+  regex_t *re_ptr;
+  int retcode;
+  size_t errbuf_size;
+  char *errbuf;
+
+  re_ptr = malloc(sizeof *re_ptr);
+  retcode = regcomp(re_ptr, "[0-9][0-9]\\.[0-9]ms)", 0);
+  if (retcode != 0) {
+    errbuf_size = regerror(retcode, re_ptr, NULL, REG_NOSUB);
+    errbuf = malloc(errbuf_size);
+    regerror(retcode, re_ptr, errbuf, errbuf_size);
+    fprintf(stderr, "%s", errbuf);
+    free(errbuf);
+    teardown_re(re_ptr);
+    return NULL;
+  }
+
+  return re_ptr;
+}
+
 int main(int argc, char **argv) {
   int i;
+  regex_t *re_ptr;
+
+  re_ptr = setup_re();
   for (i = 1; i < argc; i++) {
-    scan_file(argv[i]);
+    scan_file(argv[i], re_ptr);
   }
+  teardown_re(re_ptr);
 }
 
