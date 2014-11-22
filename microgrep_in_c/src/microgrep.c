@@ -69,9 +69,9 @@ regex_t *setup_re() {
   char *errbuf;
 
   re_ptr = malloc(sizeof *re_ptr);
-  retcode = regcomp(re_ptr, "[0-9][0-9]\\.[0-9]ms)", 0);
+  retcode = regcomp(re_ptr, "[0-9][0-9]\\.[0-9]ms)", REG_NOSUB);
   if (retcode != 0) {
-    errbuf_size = regerror(retcode, re_ptr, NULL, REG_NOSUB);
+    errbuf_size = regerror(retcode, re_ptr, NULL, 0);
     errbuf = malloc(errbuf_size);
     regerror(retcode, re_ptr, errbuf, errbuf_size);
     fprintf(stderr, "%s", errbuf);
