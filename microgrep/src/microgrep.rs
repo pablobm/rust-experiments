@@ -14,7 +14,7 @@ fn main() {
 }
 
 fn scan_file(path_str: &String) {
-    let re = regex!(r"\([0-9][0-9]\.[0-9]ms\)");
+    let re = regex!(r"[0-9][0-9]\.[0-9]ms\)");
     let path = Path::new(path_str.as_bytes());
     let file = File::open(&path);
     let mut reader = BufferedReader::new(file);
