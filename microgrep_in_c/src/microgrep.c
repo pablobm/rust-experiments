@@ -22,10 +22,7 @@ void scan_file(char *path, regex_t *re_ptr) {
   linebuf = NULL;
   linebuf_read_size = 0;
   do {
-    if (linebuf_read_size == 0) {
-      continue;
-    }
-    if ((regexec(re_ptr, linebuf, 0, NULL, 0) == 0)) {
+    if (linebuf_read_size > 0 && (regexec(re_ptr, linebuf, 0, NULL, 0) == 0)) {
       printf("%s", linebuf);
     }
   } while ((linebuf_read_size = getline(&linebuf, &linebuf_size, file)) > 0);
