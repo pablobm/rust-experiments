@@ -52,7 +52,6 @@ regex_t *setup_re() {
     regerror(retcode, re_ptr, errbuf, errbuf_size);
     fprintf(stderr, "regex(): %s\n", errbuf);
     free(errbuf);
-    teardown_re(re_ptr);
     return NULL;
   }
 
@@ -64,9 +63,11 @@ int main(int argc, char **argv) {
   regex_t *re_ptr;
 
   re_ptr = setup_re();
-  for (i = 1; i < argc; i++) {
-    scan_file(argv[i], re_ptr);
+  if (re_ptr) {
+    for (i = 1; i < argc; i++) {
+      scan_file(argv[i], re_ptr);
+    }
+    teardown_re(re_ptr);
   }
-  teardown_re(re_ptr);
 }
 
