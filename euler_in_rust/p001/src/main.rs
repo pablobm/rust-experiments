@@ -5,5 +5,5 @@ fn main() {
             acc += x;
         }
     }
-    print!("{}\n", acc);
+    println!("{}", acc);
 }
