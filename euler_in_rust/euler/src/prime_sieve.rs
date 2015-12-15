@@ -10,11 +10,9 @@ impl PrimeSieve {
     }
 
     pub fn factors_of(&mut self, target: u64) -> Vec<u64> {
-        let mut factors: Vec<u64> = Vec::new();
         let target_sqrt = (target as f64).sqrt() as u64;
         self.extend_known_primes_up_to(target_sqrt);
-        self.collect_factors_from_known_primes(&mut factors, target);
-        factors
+        self.collect_factors_from_known_primes(target)
     }
 
     fn extend_known_primes_up_to(&mut self, limit: u64) {
@@ -36,7 +34,8 @@ impl PrimeSieve {
         }
     }
 
-    fn collect_factors_from_known_primes(&self, factors: &mut Vec<u64>, target: u64) {
+    fn collect_factors_from_known_primes(&self, target: u64) -> Vec<u64> {
+        let mut factors: Vec<u64> = Vec::new();
         let target_sqrt = (target as f64).sqrt() as u64;
         for prime in self.ordered_known_primes.iter() {
             if prime > &target_sqrt {
@@ -45,6 +44,7 @@ impl PrimeSieve {
                 factors.push(*prime);
             }
         }
+        factors
     }
 
     fn largest_known_prime(&self) -> &u64 {
