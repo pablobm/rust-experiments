@@ -2,3 +2,6 @@
 name = "p003"
 version = "0.1.0"
 authors = ["Pablo Brasero <pablo@new-bamboo.co.uk>"]
+
+[dependencies]
+euler = { path = '../euler' }
