@@ -9,6 +9,32 @@ impl PrimeSieve {
         }
     }
 
+    /// Returns the prime factors of `target`.
+    ///
+    /// # Examples
+    ///
+    /// Prime factors are returned in order:
+    ///
+    /// ```
+    /// use euler::prime_sieve::PrimeSieve;
+    ///
+    /// let factors = PrimeSieve::new().factors_of(45);
+    /// assert_eq!(factors.len(), 2);
+    /// assert_eq!(factors[0], 3);
+    /// assert_eq!(factors[1], 5);
+    /// ```
+    ///
+    /// Note that, when `target` is prime, it is returned
+    /// as the only prime factor:
+    ///
+    /// ```
+    /// use euler::prime_sieve::PrimeSieve;
+    ///
+    /// let factors = PrimeSieve::new().factors_of(7);
+    /// assert_eq!(factors.len(), 1);
+    /// assert_eq!(factors[0], 7);
+    /// ```
+    ///
     pub fn factors_of(&mut self, target: u64) -> Vec<u64> {
         let target_sqrt = (target as f64).sqrt() as u64;
         self.extend_known_primes_up_to(target_sqrt);
@@ -43,6 +69,9 @@ impl PrimeSieve {
             } else if target % prime == 0 {
                 factors.push(*prime);
             }
+        }
+        if factors.len() == 0 {
+            factors.push(target);
         }
         factors
     }
