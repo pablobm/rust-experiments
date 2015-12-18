@@ -9,23 +9,29 @@ impl PrimeSieve {
         }
     }
 
-    /// Returns the prime factors of `target`.
+    /// Returns the prime factors of `target`, in order. Factors
+    /// are repeated when the appear more than once.
     ///
     /// # Examples
-    ///
-    /// Prime factors are returned in order:
     ///
     /// ```
     /// use euler::prime_sieve::PrimeSieve;
     ///
-    /// let factors = PrimeSieve::new().factors_of(9);
-    /// assert_eq!(factors.len(), 1);
-    /// assert_eq!(factors[0], 3);
+    /// let factors = PrimeSieve::new().factors_of(6);
+    /// assert_eq!(factors.len(), 2);
+    /// assert_eq!(factors[0], 2);
+    /// assert_eq!(factors[1], 3);
     ///
-    /// let factors = PrimeSieve::new().factors_of(45);
+    /// let factors = PrimeSieve::new().factors_of(9);
     /// assert_eq!(factors.len(), 2);
     /// assert_eq!(factors[0], 3);
-    /// assert_eq!(factors[1], 5);
+    /// assert_eq!(factors[1], 3);
+    ///
+    /// let factors = PrimeSieve::new().factors_of(45);
+    /// assert_eq!(factors.len(), 3);
+    /// assert_eq!(factors[0], 3);
+    /// assert_eq!(factors[1], 3);
+    /// assert_eq!(factors[2], 5);
     /// ```
     ///
     /// Note that, when `target` is prime, it is returned
