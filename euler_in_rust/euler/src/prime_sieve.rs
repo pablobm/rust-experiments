@@ -9,8 +9,9 @@ impl PrimeSieve {
         }
     }
 
-    /// Returns the prime factors of `target`, in order. Factors
-    /// are repeated when the appear more than once.
+    /// Returns the prime factors of `target`, in order.
+    /// Each factor will appear as many times as it can
+    /// divide `target`
     ///
     /// # Examples
     ///
@@ -26,6 +27,11 @@ impl PrimeSieve {
     /// assert_eq!(factors.len(), 2);
     /// assert_eq!(factors[0], 3);
     /// assert_eq!(factors[1], 3);
+    ///
+    /// let factors = PrimeSieve::new().factors_of(26);
+    /// assert_eq!(factors.len(), 2);
+    /// assert_eq!(factors[0], 2);
+    /// assert_eq!(factors[1], 13);
     ///
     /// let factors = PrimeSieve::new().factors_of(45);
     /// assert_eq!(factors.len(), 3);
@@ -46,42 +52,37 @@ impl PrimeSieve {
     /// ```
     ///
     pub fn factors_of(&mut self, target: u64) -> Vec<u64> {
-        let target_sqrt = (target as f64).sqrt() as u64;
-        self.extend_known_primes_up_to(target_sqrt);
-        self.collect_factors_from_known_primes(target)
+        self.extend_known_primes_up_to(target);
+        if self.ordered_known_primes.iter().any(|prime| *prime == target) {
+            vec![target]
+        }
+        else {
+            self.collect_factors_from_known_primes(target)
+        }
     }
 
-    fn extend_known_primes_up_to(&mut self, limit: u64) {
-        for candidate in self.largest_known_prime()+1..limit+1 {
-            let candidate_sqrt = (candidate as f64).sqrt() as u64;
-            let mut is_prime = true;
+    fn extend_known_primes_up_to(&mut self, target: u64) {
+        for candidate in self.largest_known_prime()+1..target+1 {
+            let mut reduction = candidate;
             for prime in self.ordered_known_primes.iter() {
-                if prime > &candidate_sqrt {
-                    break
-                }
-                else if candidate % prime == 0 {
-                    is_prime = false;
-                    break;
+                while reduction % prime == 0 {
+                    reduction = reduction / prime;
                 }
             }
-            if is_prime {
+            if reduction == candidate {
                 self.ordered_known_primes.push(candidate);
             }
         }
     }
 
     fn collect_factors_from_known_primes(&self, target: u64) -> Vec<u64> {
-        let mut factors: Vec<u64> = Vec::new();
-        let target_sqrt = (target as f64).sqrt() as u64;
-        for prime in self.ordered_known_primes.iter() {
-            if prime > &target_sqrt {
-                break;
-            } else if target % prime == 0 {
-                factors.push(*prime);
+        let mut factors = Vec::new();
+        let mut reduction = target;
+        for &prime in self.ordered_known_primes.iter() {
+            while reduction % prime == 0 {
+                factors.push(prime);
+                reduction = reduction / prime;
             }
-        }
-        if factors.len() == 0 {
-            factors.push(target);
         }
         factors
     }
