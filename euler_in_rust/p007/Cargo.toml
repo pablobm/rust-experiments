@@ -2,3 +2,6 @@
 name = "p007"
 version = "0.1.0"
 authors = ["pablobm"]
+
+[dependencies]
+euler = { path = '../euler' }

@@ -1,3 +1,5 @@
+pub mod prime_sieve;
+
 /// Returns the prime factors of `target`, in order.
 /// Each factor will appear as many times as it can
 /// divide `target`
