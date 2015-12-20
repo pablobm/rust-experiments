@@ -1,7 +1,5 @@
 fn main() {
     let mut best_fit : Option<u64> = None;
-    let mut f1 = 0;
-    let mut f2 = 0;
     for i in (100..1000).rev() {
         match best_fit {
             Some(x) => if i*999 < x {
@@ -17,8 +15,6 @@ fn main() {
                     Some(x) => x < product,
                 };
                 if found {
-                    f1 = i;
-                    f2 = j;
                     best_fit = Some(product);
                 }
             }
@@ -26,7 +22,7 @@ fn main() {
     }
     match best_fit {
         Some(x) => {
-            println!("{} = {} * {}", x, f1, f2);
+            println!("{}", x);
         },
         None => {
             println!("Not found :-(");
