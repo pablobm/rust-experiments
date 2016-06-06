@@ -1,11 +1,5 @@
-#![feature(io)]
-#![feature(fs)]
-#![feature(core)]
-#![feature(path)]
-
-#![feature(plugin)]
-#![plugin(regex_macros)]
 extern crate regex;
+use regex::Regex;
 
 use std::io::BufReader;
 use std::fs::File;
@@ -13,7 +7,7 @@ use std::io::prelude::*;
 
 fn main() {
     for target in std::env::args() {
-        scan_file(target.as_slice());
+        scan_file(target.as_str());
     }
 }
 
@@ -50,9 +44,9 @@ impl Iterator for FileLines {
 }
 
 fn scan_file(path_str: &str) {
-    let re = regex!(r"[0-9][0-9]\.[0-9]ms\)");
+    let re = Regex::new(r"[0-9][0-9]\.[0-9]ms\)").unwrap();
     for line in FileLines::new(path_str) {
-        if re.is_match(line.as_slice()) {
+        if re.is_match(line.as_str()) {
             print!("{}", line);
         }
     }
