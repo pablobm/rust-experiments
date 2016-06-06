@@ -4,6 +4,7 @@ use regex::Regex;
 use std::io::BufReader;
 use std::fs::File;
 use std::io::prelude::*;
+use std::process::exit;
 
 fn main() {
     for target in std::env::args() {
@@ -18,7 +19,13 @@ struct FileLines {
 impl FileLines {
     fn new(path_str: &str) -> FileLines {
         let path = std::path::Path::new(path_str);
-        let file = File::open(&path).unwrap();
+        let file = match File::open(&path) {
+            Ok(f) => f,
+            Err(e) => {
+                println!("Error opening file: {}", e);
+                exit(1);
+            }
+        };
         let reader = BufReader::new(file);
         FileLines { source: reader }
     }
