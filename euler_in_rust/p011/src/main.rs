@@ -9,27 +9,29 @@ type GridRow = Vec<GridCell>;
 type Grid = Vec<GridRow>;
 
 trait IterableGrid {
-    fn grid_iter(&self) -> GridIter;
+    fn grid_cons_iter(&self, len: usize) -> GridConsIter;
 }
 
 impl IterableGrid for Grid {
-    fn grid_iter(&self) -> GridIter {
-        GridIter {
+    fn grid_cons_iter(&self, len: usize) -> GridConsIter {
+        GridConsIter {
             grid: self,
+            len: len,
         }
     }
 }
 
-pub struct GridIter<'a> {
+pub struct GridConsIter<'a> {
     grid: &'a Grid,
+    len: usize,
 }
 
-impl<'a> Iterator for GridIter<'a> {
-    type Item = &'a i32;
+impl<'a> Iterator for GridConsIter<'a> {
+    type Item = &'a Vec<&'a i32>;
 
-    fn next(&mut self) -> Option<&'a i32> {
+    fn next(&mut self) -> Option<&'a Vec<&'a i32>> {
         match self.grid.iter().next() {
-            Some(row) => row.iter().next(),
+            Some(row) => Some(row.iter().take(self.len).collect()),
             None => None,
         }
     }
@@ -45,7 +47,7 @@ fn main() {
     };
 
     let grid = read_grid(grid_path);
-    for i in grid.grid_iter() {
+    for i in grid.grid_cons_iter(4) {
         println!("{}", i);
     }
 }
