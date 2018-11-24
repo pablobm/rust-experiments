@@ -33,13 +33,12 @@ fn main() {
 fn is_palindromic(number: u64) -> bool {
   let as_string = number.to_string();
   let digits : Vec<_> = as_string.chars().collect();
-  let mut is_it = true;
   for i in 0..(digits.len()/2) {
       let left = digits[i];
       let right = digits[digits.len()-1-i];
       if left != right {
-          is_it = false;
+          return false;
       }
   }
-  is_it
+  true
 }
