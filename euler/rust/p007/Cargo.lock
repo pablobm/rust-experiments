@@ -1,11 +1,11 @@
-[root]
+[[package]]
+name = "euler"
+version = "0.1.0"
+
+[[package]]
 name = "p007"
 version = "0.1.0"
 dependencies = [
  "euler 0.1.0",
 ]
-
-[[package]]
-name = "euler"
-version = "0.1.0"
 
